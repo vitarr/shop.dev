@@ -47,7 +47,7 @@ if (count($cart) > 0) {
             </div>
         </nav>
         <div class="container text-center" id="content">
-            <h3>Корзина ваших покупок:</h3>
+            <h3><strong>Корзина ваших покупок:</strong></h3>
             <div class="row">
                 <?php
                 $handle = fopen($filename, 'a+');
