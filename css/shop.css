@@ -1,0 +1,103 @@
+
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+footer {
+    margin-top: 25px;
+    background-color: #222;
+    color: #9d9d9d;
+    padding: 25px;
+}
+
+
+body {
+    background: #f2f2f2;
+}
+
+.product-item {
+    padding: 15px;
+    background: #fff;
+    margin-top: 20px;
+    position: relative;
+}
+
+.product-item:hover {
+    box-shadow: 5px 5px rgb(192, 192, 192);
+}
+
+.product-item:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    font-size: 0;
+    line-height:0;
+}
+.sticker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 63px;
+    height: 63px;
+}
+.sticker-new {
+    background: url(http://keenthemes.com/assets/bootsnipp/new.png) no-repeat;
+    left: auto;
+    right: 0;
+}
+.pi-img-wrapper {
+    position: relative;    
+}
+.pi-img-wrapper img {
+    min-height: 150px;
+    max-height: 150px;
+}
+
+.product-item .btn:hover {
+    background: #e84d1c;
+    border-color: #c8c8c8;
+}
+
+.product-item h3 {
+    font-size: 14px;
+    font-weight: 300;
+    padding-bottom: 4px;
+    text-transform: uppercase;
+    color: #3e4d5c;
+}
+
+.product-item h3:hover {
+    color: #E02222;
+}
+.pi-price {
+    color: #e84d1c;
+    font-size: 18px;
+    float: left;
+    padding-top: 1px;
+}
+.product-item .add2cart {
+    float: right;
+    color: #a8aeb3;
+    border: 1px #ededed solid;
+    padding: 3px 6px;
+    text-transform: uppercase;
+}
+.product-item .add2cart:hover {
+    color: #fff;
+    background: #e84d1c;
+    border-color: #e84d1c;
+}
+
+label{
+    float: right;
+}
+#up{
+    color: #9d9d9d;
+}
+.btn-block{
+    color: black;
+    font-size: 20px;
+}
