@@ -1,6 +1,6 @@
 <?php
 
-function handler($file, $size, $root) {
+function handler($file, $size, $root, $AVAILABLE_TYPES) {
     if (!isset($_FILES[$file])) {
         $message = 'Изображение отсутствует';
     } else {
@@ -48,7 +48,7 @@ function handler($file, $size, $root) {
                 </div>';
                         break;
                 }
-            } elseif (!in_array($_FILES[$file]['type'], AVAILABLE_TYPES)) {
+            } elseif (!in_array($_FILES[$file]['type'], $AVAILABLE_TYPES)) {
                 $message = '<div class="alert alert-danger">
                     <h2>Отказ!</h2><h3>Тип файла не соответствует.</h3>
                 </div>';

@@ -1,0 +1,1 @@
+a:2:{i:0;a:5:{s:9:"imagename";s:9:"tiger.jpg";s:4:"name";s:1:"1";s:5:"price";s:1:"1";s:8:"category";s:1:"1";s:2:"id";s:1:"1";}i:1;a:5:{s:9:"imagename";s:11:"cricket.jpg";s:4:"name";s:7:"cricket";s:5:"price";s:4:"5555";s:8:"category";s:16:"винтовки";s:2:"id";s:1:"1";}}
