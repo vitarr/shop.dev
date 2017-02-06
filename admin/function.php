@@ -63,7 +63,7 @@ function handler($file, $size, $root, $AVAILABLE_TYPES) {
                 if (move_uploaded_file($tmp_path, $destination_path)) {
                     $message = array(
                         '<div class="alert alert-success">
-                    <h2>Успех!</h2><h3>Новый товар успешно успешно добавлен.</h3>
+                    <h3>Новый товар успешно успешно добавлен.</h3>
                 </div>',
                         'loaded'
                     );
