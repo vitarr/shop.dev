@@ -48,6 +48,7 @@ if(count($cart)>0){
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
+                        <li><a href="/admin/auth.php"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
                     </ul>
                 </div>
             </div>

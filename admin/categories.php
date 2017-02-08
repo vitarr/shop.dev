@@ -7,6 +7,24 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+            .btn-link{
+                user-select: none;
+            }
+            .container{
+                margin-top: 50px;
+            }
+            img{
+                max-width: 200px;
+                max-height: 200px;
+            }
+            .images{
+                max-width: 100px;
+            }
+            h2{
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -17,54 +35,55 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>                        
                     </button>
-                    <a class="navbar-brand" href="#">Logo</a>
+                    <a class="navbar-brand" href="#">Админ-панель:</a>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.php">Товары</a></li>
-                        <li><a href="categories.php">Категории</a></li>
-                        <li><a href="orders.php">Заказы</a></li>
+                        <li><a href="index.php">Товары</a></li>
+                        <li class="active"><a href="categories.php">Категории</a></li>
+                        <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
         <div class="container">
-            <a href="addgood.php" type="button" class="btn btn-default">Добавить новый товар</a>
-            <h2>Товары:</h2>         
+            <a href="addcategories.php" type="button" class="btn btn-default">Добавить новую категорию</a>
+            <h2>Категории:</h2>         
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Изображение</th>
                         <th>Название</th>
-                        <th>Цена</th>
-                        <th>Категория</th>
                         <th>ID</th>
                     </tr>
                 </thead>
+                <tbody>
                 <?php
-                if (file_exists('goods.txt')):
-                    $filename = 'goods.txt';
-                    $goodsfile = fopen($filename, 'a+');
-                    $goodsarray = unserialize(fgets($goodsfile));
-                    foreach ($goodsarray as $good):
+                if (file_exists('categories.txt')):
+                    $filename = 'categories.txt';
+                    $catsfile = fopen($filename, 'a+');
+                    $catsarray = unserialize(fgets($catsfile));
+                    foreach ($catsarray as $catid => $category):
                         ?>
-                        <tbody>
+                        
                             <tr>
-                                <td class='images'><img src="images/<?= $good['imagename'] ?>"></td>
-                                <td><strong><?= $good['name'] ?></strong></td>
-                                <td><strong><?= $good['price'] ?></strong></td>
-                                <td><strong><?= $good['category'] ?></strong></td>
-                                <td><strong><?= $good['id'] ?></strong></td>
+                                <td><strong>
+                                        <form action="category.php" method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $catid ?>" name="id"/>
+                                            <input type="submit" name="cat" value="<?= $category['name'] ?>" class="btn btn-link"/>
+                                        </form>
+                                    </strong>
+                                </td>
+                                <td><strong><?= $catid ?></strong></td>
                             </tr>
-                        </tbody> 
                         <?php
                     endforeach;
-                    fclose($goodsfile);
+                    fclose($catsfile);
                 endif;
                 ?>
+                </tbody> 
             </table>
         </div>
     </body>

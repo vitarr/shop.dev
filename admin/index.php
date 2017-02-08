@@ -1,3 +1,26 @@
+<?php
+if (filter_input(INPUT_POST, 'delid')):
+    $filename = 'goods.txt';
+    $goodsfile = fopen($filename, 'a+');
+    $goodsarray = unserialize(fgets($goodsfile));
+    fclose($goodsfile);
+    $catsfilename = 'categories.txt';
+    $catsfile = fopen($catsfilename, 'a+');
+    $catsarray = unserialize(fgets($catsfile));
+    fclose($catsfile);
+
+    unset($catsarray[$goodsarray[filter_input(INPUT_POST, 'delid')]['category']]['items'][filter_input(INPUT_POST, 'delid')]);
+    unset($goodsarray[filter_input(INPUT_POST, 'delid')]);
+
+    $newcatsfile = fopen($catsfilename, 'w+');
+    fwrite($newcatsfile, serialize($catsarray));
+    fclose($newcatsfile);
+    $newgoodsfile = fopen($filename, 'w+');
+    fwrite($newgoodsfile, serialize($goodsarray));
+    fclose($newgoodsfile);
+endif;
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -17,9 +40,12 @@
             max-height: 200px;
         }
         .images{
-            max-width: 100px;
+            width: 20%;
         }
         h2{
+            text-align: center;
+        }
+        table{
             text-align: center;
         }
     </style>
@@ -38,7 +64,7 @@
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="index.php">Товары</a></li>
                         <li><a href="categories.php">Категории</a></li>
-                        <li><a href="orders.php">Заказы</a></li>
+                        <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
@@ -48,7 +74,8 @@
         </nav>
         <div class="container">
             <a href="addgood.php" type="button" class="btn btn-default">Добавить новый товар</a>
-            <h2>Товары:</h2>         
+            <h2>Товары:</h2>
+            <br>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -64,20 +91,41 @@
                     $filename = 'goods.txt';
                     $goodsfile = fopen($filename, 'a+');
                     $goodsarray = unserialize(fgets($goodsfile));
-                    foreach ($goodsarray as $good):
+                    $catsfilename = 'categories.txt';
+                    $catsfile = fopen($catsfilename, 'a+');
+                    $catsarray = unserialize(fgets($catsfile));
+                    foreach ($goodsarray as $id => $good):
                         ?>
                         <tbody>
                             <tr>
                                 <td class='images'><img src="images/<?= $good['imagename'] ?>"></td>
                                 <td><strong><?= $good['name'] ?></strong></td>
-                                <td><strong><?= $good['price'] ?></strong></td>
-                                <td><strong><?= $good['category'] ?></strong></td>
-                                <td><strong><?= $good['id'] ?></strong></td>
+                                <td><strong><?= $good['price'] ?> грн.</strong></td>
+                                <td><strong><?= $catsarray[$good['category']]['name'] ?></strong></td>
+                                <td><strong><?= $id ?></strong></td>
+                                <td>
+                                    <strong>
+                                        <form action="editgood.php" method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $good['category'] ?>" name="catid"/>
+                                            <input type="hidden" value="<?= $id ?>" name="editid"/>
+                                            <input type="submit" name="edit" value="Редактировать"/>
+                                        </form>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <form method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $id ?>" name="delid"/>
+                                            <input type="submit" name="delete" value="Удалить"/>
+                                        </form>
+                                    </strong>
+                                </td>
                             </tr>
                         </tbody> 
                         <?php
                     endforeach;
                     fclose($goodsfile);
+                    fclose($catsfile);
                 endif;
                 ?>
             </table>

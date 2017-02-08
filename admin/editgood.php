@@ -4,7 +4,22 @@ $AVAILABLE_TYPES = array(
     'image/png',
     'image/gif',
 );
-if (filter_input(INPUT_POST, 'add')):
+$getid = filter_input(INPUT_POST, 'editid');
+$getidcat = filter_input(INPUT_POST, 'catid');
+$saveid = filter_input(INPUT_POST, 'saveid');
+$savecatid = filter_input(INPUT_POST, 'savecatid');
+
+$filename = 'goods.txt';
+$goodsfile = fopen($filename, 'a+');
+$goodsarray = unserialize(fgets($goodsfile));
+fclose($goodsfile);
+
+$catsfilename = 'categories.txt';
+$catsfile = fopen($catsfilename, 'a+');
+$catsarray = unserialize(fgets($catsfile));
+fclose($catsfile);
+
+if (filter_input(INPUT_POST, 'edit')):
     $file = 'image';
     $size = 3;
     $root = 'images';
@@ -12,31 +27,23 @@ if (filter_input(INPUT_POST, 'add')):
     $message = handler($file, $size, $root, $AVAILABLE_TYPES);
     if ($message[1] == 'loaded'):
         $message = $message[0];
-        $filename = 'goods.txt';
-        $goodsfile = fopen($filename, 'a+');
-        $goodsarray = unserialize(fgets($goodsfile));
-        fclose($goodsfile);
-        $id = count($goodsarray);
-        while (array_key_exists($id, $goodsarray) || $id < 1 || $id < end(array_keys($goodsarray)) || $id == end(array_keys($goodsarray))):
-            $id++;
-        endwhile;
-        $goodsarray[$id] = array(
-            'imagename' => $_FILES[$file]['name'],
-            'name' => filter_input(INPUT_POST, 'name'),
-            'price' => filter_input(INPUT_POST, 'price'),
-            'category' => filter_input(INPUT_POST, 'selectedcat'),
-        );
+        $goodsarray[$saveid]['imagename'] = $_FILES[$file]['name'];
+        $goodsarray[$saveid]['name'] = filter_input(INPUT_POST, 'name');
+        $goodsarray[$saveid]['price'] = filter_input(INPUT_POST, 'price');
+        $goodsarray[$saveid]['category'] = filter_input(INPUT_POST, 'selectedcat');
         $newgoodsfile = fopen($filename, 'w+');
         fwrite($newgoodsfile, serialize($goodsarray));
         fclose($newgoodsfile);
-        $catsfilename = 'categories.txt';
-        $catsfile = fopen($catsfilename, 'a+');
-        $catsarray = unserialize(fgets($catsfile));
-        fclose($catsfile);
-        $catsarray[filter_input(INPUT_POST, 'selectedcat')]['items'][$id] = filter_input(INPUT_POST, 'name');
+
+        if ($getidcat !== filter_input(INPUT_POST, 'selectedcat')):
+            unset($catsarray[$goodsarray[$savecatid]['category']]['items'][$savecatid]);
+        endif;
+
+        $catsarray[filter_input(INPUT_POST, 'selectedcat')]['items'][$saveid] = filter_input(INPUT_POST, 'name');
         $newcatsfile = fopen($catsfilename, 'w+');
         fwrite($newcatsfile, serialize($catsarray));
         fclose($newcatsfile);
+        header("Location:" . '/admin/index.php');
     endif;
 endif;
 ?>
@@ -50,6 +57,25 @@ endif;
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
+    <style>
+        .container{
+            margin-top: 50px;
+        }
+        img{
+            max-width: 200px;
+            max-height: 200px;
+        }
+        .images{
+            width: 20%;
+            text-align: center;
+        }
+        h2{
+            text-align: center;
+        }
+        table{
+            text-align: center;
+        }
+    </style>
     <body>
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -75,7 +101,7 @@ endif;
         </nav>
         <div class="container">
             <form method="post" enctype="multipart/form-data">
-                <h2>Новый товар:</h2>         
+                <h2>Редактирование товара:</h2>         
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -87,32 +113,33 @@ endif;
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="file" name="image"/></td>
-                            <td><input type="text" name="name"/></td>
-                            <td><input type="number" name="price"/></td>
+                            <td class="images">
+                                <img src="images/<?= $goodsarray[$getid]['imagename'] ?>">
+                                <input type="file" name="image"/>
+                            </td>
+                            <td><br><br><input type="text" name="name"  value="<?= $goodsarray[$getid]['name'] ?>"/></td>
                             <td>
+                                <br><br>
+                                <input type="number" name="price"  value="<?= $goodsarray[$getid]['price'] ?>"/>
+                                <input type="hidden" name="saveid"  value="<?= $getid ?>"/>
+                                <input type="hidden" name="savecatid"  value="<?= $getidcat ?>"/>
+                            </td>
+                            <td><br><br>
                                 <select name="selectedcat" required>
-                                    <option selected disabled=""></option>
                                     <?php
-                                    $catsfilename = 'categories.txt';
-                                    $catsfile = fopen($catsfilename, 'a+');
-                                    $catsarray = unserialize(fgets($catsfile));
                                     foreach ($catsarray as $id => $category):
                                         ?>
                                         <option value="<?= $id ?>"><?= $category['name'] ?></option>
                                         <?php
                                     endforeach;
-                                    fclose($catsfile);
                                     ?>
                                 </select>
                             </td>
                         </tr>
                     </tbody> 
                 </table>
-                <input type="submit" name="add" value="Добавить товар"/>
+                <input type="submit" name="edit" value="Подтвердить изменения"/>
             </form>
-            <br>
-            <?= $message ?>
         </div>
     </body>
 </html>
