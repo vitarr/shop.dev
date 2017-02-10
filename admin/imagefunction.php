@@ -3,9 +3,8 @@
 function handler($file, $size, $root, $AVAILABLE_TYPES) {
     if (!isset($_FILES[$file])) {
         $message = 'Изображение отсутствует';
-    } else {
-            if ($error != UPLOAD_ERR_OK) {
-                switch ($error) {
+    } elseif ($_FILES[$file]['error'] != UPLOAD_ERR_OK) {
+                switch ($_FILES[$file]['error']) {
                     case UPLOAD_ERR_INI_SIZE:
                         $message = '<div class="alert alert-danger">
                     <h2>Отказ!</h2><h3>Размер файла превышает допустимый сервером.</h3>
@@ -73,6 +72,6 @@ function handler($file, $size, $root, $AVAILABLE_TYPES) {
                 </div>';
                 }
             }
-    }
-    return $message;
+            return $message;
 }
+    
