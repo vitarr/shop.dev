@@ -15,6 +15,7 @@ if (filter_input(INPUT_POST, 'add')):
         $filename = 'goods.txt';
         $goodsfile = fopen($filename, 'a+');
         $goodsarray = unserialize(fgets($goodsfile));
+        (array)$goodsarray;
         fclose($goodsfile);
         $id = count($goodsarray);
         while (array_key_exists($id, $goodsarray) || $id < 1 || $id < end(array_keys($goodsarray)) || $id == end(array_keys($goodsarray))):
@@ -112,7 +113,7 @@ endif;
                 <input type="submit" name="add" value="Добавить товар"/>
             </form>
             <br>
-            <?= $message ?>
+            <?php $message ?>
         </div>
     </body>
 </html>

@@ -4,6 +4,7 @@ if (filter_input(INPUT_POST, 'add')):
     $catsfile = fopen($filename, 'a+');
     if ($catsfile):
         $catsarray = unserialize(fgets($catsfile));
+        (array) $catsarray;
         fclose($catsfile);
         $id = count($catsarray);
         if (array_key_exists($id, $catsarray)):
@@ -17,7 +18,7 @@ if (filter_input(INPUT_POST, 'add')):
         fwrite($newcatsfile, serialize($catsarray));
         fclose($newcatsfile);
         $message = '<div class="alert alert-success">
-                    <h3>Новый категория успешно успешно добавлена.</h3>
+                    <h3>Новая категория успешно успешно добавлена.</h3>
                 </div>';
     endif;
 endif;
@@ -78,7 +79,7 @@ endif;
                 <input type="submit" name="add" value="Добавить категорию"/>
             </form>
             <br>
-            <?= $message ?>
+            <?php $message ?>
         </div>
     </body>
 </html>
