@@ -1,1 +1,0 @@
-a:1:{i:1;a:4:{s:9:"imagename";s:9:"Steyr.jpg";s:4:"name";s:9:"kalibrgun";s:5:"price";s:4:"9999";s:8:"category";s:1:"1";}}
