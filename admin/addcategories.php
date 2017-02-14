@@ -1,25 +1,31 @@
 <?php
+session_start();
+if (isset($_SESSION['message'])):
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+endif;
 if (filter_input(INPUT_POST, 'add')):
-    $filename = 'categories.txt';
-    $catsfile = fopen($filename, 'a+');
-    if ($catsfile):
-        $catsarray = unserialize(fgets($catsfile));
-        (array) $catsarray;
-        fclose($catsfile);
-        $id = count($catsarray);
-        if (array_key_exists($id, $catsarray)):
-            $id++;
-        endif;
-        $catsarray[$id] = array(
-            'name' => filter_input(INPUT_POST, 'name'),
-            'items' => array()
-        );
-        $newcatsfile = fopen($filename, 'w+');
-        fwrite($newcatsfile, serialize($catsarray));
-        fclose($newcatsfile);
+    $filename = 'goods.txt';
+    $handle = fopen($filename, 'a+');
+    if ($handle):
         $message = '<div class="alert alert-success">
                     <h3>Новая категория успешно успешно добавлена.</h3>
                 </div>';
+        $_SESSION['message'] = $message;
+        $array = unserialize(fgets($handle));
+        (array) $array;
+        fclose($handle);
+        $categories_ids = array_keys($array);
+        $last_category_id = end($categories_ids);
+        $id = $last_category_id + 1;
+        $array[$id] = array(
+            'name' => filter_input(INPUT_POST, 'name'),
+            'items' => array()
+        );
+        $newfile = fopen($filename, 'w+');
+        fwrite($newfile, serialize($array));
+        fclose($newfile);
+        header("Location:" . $_SERVER['PHP_SELF']);
     endif;
 endif;
 ?>
@@ -35,6 +41,23 @@ endif;
         <style>
             .name{
                 width: 100%;
+            }
+            .container{
+                margin-top: 50px;
+            }
+            img{
+                max-width: 200px;
+                max-height: 200px;
+            }
+            .images{
+                width: 20%;
+                text-align: center;
+            }
+            h2{
+                text-align: center;
+            }
+            table, th{
+                text-align: center;
             }
         </style>
     </head>
@@ -63,7 +86,9 @@ endif;
         </nav>
         <div class="container">
             <form method="post" enctype="multipart/form-data">
-                <h2>Новая категория:</h2>         
+                <h2>Новая категория:</h2>  
+                <br>
+                <br>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -72,14 +97,18 @@ endif;
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="text" name="name" class="name"/></td>
+                            <td><input type="text" name="name" class="name" required/></td>
                         </tr>
                     </tbody> 
                 </table>
                 <input type="submit" name="add" value="Добавить категорию"/>
             </form>
             <br>
-            <?php $message ?>
+            <?php
+            if (isset($message)):
+                echo $message;
+            endif;
+            ?>
         </div>
     </body>
 </html>

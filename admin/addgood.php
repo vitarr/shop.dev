@@ -4,40 +4,45 @@ $AVAILABLE_TYPES = array(
     'image/png',
     'image/gif',
 );
+session_start();
+if (isset($_SESSION['message'])):
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+endif;
+$filename = 'goods.txt';
+$handle = fopen($filename, 'a+');
+$array = unserialize(fgets($handle));
+(array) $array;
+fclose($handle);
 if (filter_input(INPUT_POST, 'add')):
     $file = 'image';
     $size = 3;
+    if (!is_dir('images')):
+        mkdir('images');
+    endif;
     $root = 'images';
     include_once 'imagefunction.php';
     $message = handler($file, $size, $root, $AVAILABLE_TYPES);
     if ($message[1] == 'loaded'):
         $message = $message[0];
-        $filename = 'goods.txt';
-        $goodsfile = fopen($filename, 'a+');
-        $goodsarray = unserialize(fgets($goodsfile));
-        (array)$goodsarray;
-        fclose($goodsfile);
-        $id = count($goodsarray);
-        while (array_key_exists($id, $goodsarray) || $id < 1 || $id < end(array_keys($goodsarray)) || $id == end(array_keys($goodsarray))):
-            $id++;
-        endwhile;
-        $goodsarray[$id] = array(
+        $_SESSION['message'] = $message;
+        $id = 0;
+        foreach ($array as $category):
+            $items_ids = array_keys($category['items']);
+            $last_item_id = end($items_ids);
+            if ($id <= $last_item_id):
+                $id = $last_item_id + 1;
+            endif;
+        endforeach;
+        $array[filter_input(INPUT_POST, 'selectedcat')]['items'][$id] = array(
             'imagename' => $_FILES[$file]['name'],
             'name' => filter_input(INPUT_POST, 'name'),
-            'price' => filter_input(INPUT_POST, 'price'),
-            'category' => filter_input(INPUT_POST, 'selectedcat'),
+            'price' => filter_input(INPUT_POST, 'price')
         );
-        $newgoodsfile = fopen($filename, 'w+');
-        fwrite($newgoodsfile, serialize($goodsarray));
-        fclose($newgoodsfile);
-        $catsfilename = 'categories.txt';
-        $catsfile = fopen($catsfilename, 'a+');
-        $catsarray = unserialize(fgets($catsfile));
-        fclose($catsfile);
-        $catsarray[filter_input(INPUT_POST, 'selectedcat')]['items'][$id] = filter_input(INPUT_POST, 'name');
-        $newcatsfile = fopen($catsfilename, 'w+');
-        fwrite($newcatsfile, serialize($catsarray));
-        fclose($newcatsfile);
+        $newfile = fopen($filename, 'w+');
+        fwrite($newfile, serialize($array));
+        fclose($newfile);
+        header("Location:" . $_SERVER['PHP_SELF']);
     endif;
 endif;
 ?>
@@ -50,6 +55,25 @@ endif;
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+            .container{
+                margin-top: 50px;
+            }
+            img{
+                max-width: 200px;
+                max-height: 200px;
+            }
+            .images{
+                width: 20%;
+                text-align: center;
+            }
+            h2{
+                text-align: center;
+            }
+            table, th{
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -76,7 +100,9 @@ endif;
         </nav>
         <div class="container">
             <form method="post" enctype="multipart/form-data">
-                <h2>Новый товар:</h2>         
+                <h2>Новый товар:</h2> 
+                <br>
+                <br>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -88,22 +114,18 @@ endif;
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="file" name="image"/></td>
-                            <td><input type="text" name="name"/></td>
-                            <td><input type="number" name="price"/></td>
+                            <td><input type="file" name="image" required/></td>
+                            <td><input type="text" name="name" required/></td>
+                            <td><input type="number" name="price" required/></td>
                             <td>
                                 <select name="selectedcat" required>
                                     <option selected disabled=""></option>
                                     <?php
-                                    $catsfilename = 'categories.txt';
-                                    $catsfile = fopen($catsfilename, 'a+');
-                                    $catsarray = unserialize(fgets($catsfile));
-                                    foreach ($catsarray as $id => $category):
+                                    foreach ($array as $id => $category):
                                         ?>
                                         <option value="<?= $id ?>"><?= $category['name'] ?></option>
                                         <?php
                                     endforeach;
-                                    fclose($catsfile);
                                     ?>
                                 </select>
                             </td>
@@ -113,7 +135,11 @@ endif;
                 <input type="submit" name="add" value="Добавить товар"/>
             </form>
             <br>
-            <?php $message ?>
+            <?php
+            if (isset($message)):
+                echo $message;
+            endif;
+            ?>
         </div>
     </body>
 </html>

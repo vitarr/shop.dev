@@ -4,20 +4,18 @@ $AVAILABLE_TYPES = array(
     'image/png',
     'image/gif',
 );
-$getid = filter_input(INPUT_POST, 'editid');
-$getidcat = filter_input(INPUT_POST, 'catid');
-$saveid = filter_input(INPUT_POST, 'saveid');
-$savecatid = filter_input(INPUT_POST, 'savecatid');
-
+session_start();
+if (isset($_SESSION['message'])):
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+endif;
 $filename = 'goods.txt';
-$goodsfile = fopen($filename, 'a+');
-$goodsarray = unserialize(fgets($goodsfile));
-fclose($goodsfile);
-
-$catsfilename = 'categories.txt';
-$catsfile = fopen($catsfilename, 'a+');
-$catsarray = unserialize(fgets($catsfile));
-fclose($catsfile);
+$handle = fopen($filename, 'a+');
+$array = unserialize(fgets($handle));
+(array) $array;
+fclose($handle);
+$item_id = $_SESSION['edit_id'];
+$cat_id = $_SESSION['category_of_edit'];
 
 if (filter_input(INPUT_POST, 'edit')):
     $file = 'image';
@@ -25,25 +23,25 @@ if (filter_input(INPUT_POST, 'edit')):
     $root = 'images';
     include_once 'imagefunction.php';
     $message = handler($file, $size, $root, $AVAILABLE_TYPES);
-    if ($message[1] == 'loaded'):
-        $message = $message[0];
-        $goodsarray[$saveid]['imagename'] = $_FILES[$file]['name'];
-        $goodsarray[$saveid]['name'] = filter_input(INPUT_POST, 'name');
-        $goodsarray[$saveid]['price'] = filter_input(INPUT_POST, 'price');
-        $goodsarray[$saveid]['category'] = filter_input(INPUT_POST, 'selectedcat');
-        $newgoodsfile = fopen($filename, 'w+');
-        fwrite($newgoodsfile, serialize($goodsarray));
-        fclose($newgoodsfile);
-
-        if ($getidcat !== filter_input(INPUT_POST, 'selectedcat')):
-            unset($catsarray[$goodsarray[$savecatid]['category']]['items'][$savecatid]);
+    if ($message[1] == 'loaded' || !$_FILES[$file]['name']):
+        $message = '<div class="alert alert-success">
+                    <h3>Товар успешно успешно отредактирован.</h3>
+                </div>';
+        $_SESSION['message'] = $message;
+        if ($_FILES[$file]['name']):
+            $array[$cat_id]['items'][$item_id]['imagename'] = $_FILES[$file]['name'];
         endif;
-
-        $catsarray[filter_input(INPUT_POST, 'selectedcat')]['items'][$saveid] = filter_input(INPUT_POST, 'name');
-        $newcatsfile = fopen($catsfilename, 'w+');
-        fwrite($newcatsfile, serialize($catsarray));
-        fclose($newcatsfile);
-        header("Location:" . '/admin/index.php');
+        $array[$cat_id]['items'][$item_id]['name'] = filter_input(INPUT_POST, 'name');
+        $array[$cat_id]['items'][$item_id]['price'] = filter_input(INPUT_POST, 'price');
+        if ($cat_id !== filter_input(INPUT_POST, 'selectedcat')):
+            $array[filter_input(INPUT_POST, 'selectedcat')]['items'][$item_id] = $array[$cat_id]['items'][$item_id];
+            $_SESSION['category_of_edit'] = filter_input(INPUT_POST, 'selectedcat');
+            unset($array[$cat_id]['items'][$item_id]);
+        endif;
+        $newfile = fopen($filename, 'w+');
+        fwrite($newfile, serialize($array));
+        fclose($newfile);
+        header("Location:" . $_SERVER['PHP_SELF']);
     endif;
 endif;
 ?>
@@ -72,7 +70,7 @@ endif;
         h2{
             text-align: center;
         }
-        table{
+        table, th{
             text-align: center;
         }
     </style>
@@ -101,7 +99,9 @@ endif;
         </nav>
         <div class="container">
             <form method="post" enctype="multipart/form-data">
-                <h2>Редактирование товара:</h2>         
+                <h2>Редактирование товара:</h2>
+                <br>
+                <br>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -114,20 +114,19 @@ endif;
                     <tbody>
                         <tr>
                             <td class="images">
-                                <img src="images/<?= $goodsarray[$getid]['imagename'] ?>">
+                                <img src="images/<?= $array[$cat_id]['items'][$item_id]['imagename'] ?>">
                                 <input type="file" name="image"/>
                             </td>
-                            <td><br><br><input type="text" name="name"  value="<?= $goodsarray[$getid]['name'] ?>"/></td>
-                            <td>
-                                <br><br>
-                                <input type="number" name="price"  value="<?= $goodsarray[$getid]['price'] ?>"/>
-                                <input type="hidden" name="saveid"  value="<?= $getid ?>"/>
-                                <input type="hidden" name="savecatid"  value="<?= $getidcat ?>"/>
+                            <td class="parent">
+                                <span><input type="text" name="name"  value="<?= $array[$cat_id]['items'][$item_id]['name'] ?>"/></span>
                             </td>
-                            <td><br><br>
+                            <td>
+                                <input type="number" name="price"  value="<?= $array[$cat_id]['items'][$item_id]['price'] ?>"/>
+                            </td>
+                            <td>
                                 <select name="selectedcat" required>
                                     <?php
-                                    foreach ($catsarray as $id => $category):
+                                    foreach ($array as $id => $category):
                                         ?>
                                         <option value="<?= $id ?>"><?= $category['name'] ?></option>
                                         <?php
@@ -140,6 +139,12 @@ endif;
                 </table>
                 <input type="submit" name="edit" value="Подтвердить изменения"/>
             </form>
+            <br>
+            <?php
+            if (isset($message)):
+                echo $message;
+            endif;
+            ?>
         </div>
     </body>
 </html>

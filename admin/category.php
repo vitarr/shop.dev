@@ -1,34 +1,28 @@
 <?php
-if (filter_input(INPUT_POST, 'delid')):
-    $filename = 'goods.txt';
-    $goodsfile = fopen($filename, 'a+');
-    $goodsarray = unserialize(fgets($goodsfile));
-    fclose($goodsfile);
-    $catsfilename = 'categories.txt';
-    $catsfile = fopen($catsfilename, 'a+');
-    $catsarray = unserialize(fgets($catsfile));
-    fclose($catsfile);
-
-    unset($catsarray[$goodsarray[filter_input(INPUT_POST, 'delid')]['category']]['items'][filter_input(INPUT_POST, 'delid')]);
-    unset($goodsarray[filter_input(INPUT_POST, 'delid')]);
-
-    $newcatsfile = fopen($catsfilename, 'w+');
-    fwrite($newcatsfile, serialize($catsarray));
-    fclose($newcatsfile);
-    $newgoodsfile = fopen($filename, 'w+');
-    fwrite($newgoodsfile, serialize($goodsarray));
-    fclose($newgoodsfile);
-endif;
-if (filter_input(INPUT_POST, 'rename')):
-    $idcat = filter_input(INPUT_POST, 'idcat');
-    $catsfilename = 'categories.txt';
-    $catsfile = fopen($catsfilename, 'a+');
-    $catsarray = unserialize(fgets($catsfile));
-    fclose($catsfile);
-    $catsarray[$idcat]['name'] = filter_input(INPUT_POST, 'newname');
-    $newcatsfile = fopen($catsfilename, 'w+');
-    fwrite($newcatsfile, serialize($catsarray));
-    fclose($newcatsfile);
+session_start();
+$filename = 'goods.txt';
+$handle = fopen($filename, 'a+');
+$array = unserialize(fgets($handle));
+(array) $array;
+fclose($handle);
+if (filter_input(INPUT_POST, 'del_id')):
+    unset($array[filter_input(INPUT_POST, 'category_of_del')]['items'][filter_input(INPUT_POST, 'del_id')]);
+    $newfile = fopen($filename, 'w+');
+    fwrite($newfile, serialize($array));
+    fclose($newfile);
+    header("Location:" . $_SERVER['PHP_SELF']);
+elseif (filter_input(INPUT_POST, 'rename')):
+    $array[filter_input(INPUT_POST, 'cat_id')]['name'] = filter_input(INPUT_POST, 'newname');
+    $newfile = fopen($filename, 'w+');
+    fwrite($newfile, serialize($array));
+    fclose($newfile);
+    header("Location:" . $_SERVER['PHP_SELF']);
+elseif (filter_input(INPUT_POST, 'edit')):
+    unset($_SESSION['edit_id']);
+    unset($_SESSION['category_of_edit']);
+    $_SESSION['edit_id'] = filter_input(INPUT_POST, 'edit_id');
+    $_SESSION['category_of_edit'] = filter_input(INPUT_POST, 'category_of_edit');
+    header("Location:" . 'editgood.php');
 endif;
 ?>
 <!DOCTYPE html>
@@ -58,6 +52,9 @@ endif;
         .newname{
             width: 40%;
         }
+        table, th{
+            text-align: center;
+        }
     </style>
     <body>
         <nav class="navbar navbar-inverse">
@@ -84,24 +81,16 @@ endif;
         </nav>
         <div class="container">
             <?php
-            if (file_exists('categories.txt') && (filter_input(INPUT_POST, 'cat') || filter_input(INPUT_POST, 'delid') || filter_input(INPUT_POST, 'idcat'))):
-                $filename = 'categories.txt';
-                $catsfile = fopen($filename, 'a+');
-                $catsarray = unserialize(fgets($catsfile));
-                $idcat = filter_input(INPUT_POST, 'id');
-                if (filter_input(INPUT_POST, 'back')):
-                    $idcat = filter_input(INPUT_POST, 'back');
-                elseif (filter_input(INPUT_POST, 'rename')):
-                    $idcat = filter_input(INPUT_POST, 'idcat');
-                endif;
-                $name = $catsarray[$idcat]['name'];
+            if (file_exists('goods.txt') && isset($_SESSION['cat_id'])):
+                $cat_id = $_SESSION['cat_id'];
+                $name = $array[$cat_id]['name'];
                 ?>
                 <h2><?= $name ?>:</h2>
                 <br>
                 <br>
                 <form method="post" enctype="multipart/form-data">
-                    <input type="hidden" value="<?= $idcat ?>" name="idcat"/>
-                    <input type="text" value="<?= $catsarray[$idcat]['name'] ?>" name="newname" class="newname"/>
+                    <input type="hidden" value="<?= $cat_id ?>" name="cat_id"/>
+                    <input type="text" value="<?= $name ?>" name="newname" class="newname"/>
                     <input type="submit" name="rename" value="Переименовать категорию" class="btn btn-default"/>
                 </form>
                 <br>
@@ -112,45 +101,40 @@ endif;
                             <th>Название</th>
                             <th>Цена</th>
                             <th>ID</th>
+                            <th colspan="2">Управление</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if (file_exists('goods.txt')):
-                            $filename = 'goods.txt';
-                            $goodsfile = fopen($filename, 'a+');
-                            $goodsarray = unserialize(fgets($goodsfile));
-                            foreach ($catsarray[$idcat]['items'] as $iditem => $goodincat):
-                                ?>
-                                <tr>
-                                    <td class='images'><img src="images/<?= $goodsarray[$iditem]['imagename'] ?>"></td>
-                                    <td><strong><?= $goodsarray[$iditem]['name'] ?></strong></td>
-                                    <td><strong><?= $goodsarray[$iditem]['price'] ?></strong></td>
-                                    <td><strong><?= $iditem ?></strong></td>
-                                    <td>
-                                        <strong>
-                                            <form action="editgood.php" method="post" enctype="multipart/form-data">
-                                                <input type="hidden" value="<?= $iditem ?>" name="editid"/>
-                                                <input type="submit" name="edit" value="Редактировать"/>
-                                            </form>
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        <strong>
-                                            <form method="post" enctype="multipart/form-data">
-                                                <input type="hidden" value="<?= $iditem ?>" name="delid"/>
-                                                <input type="hidden" value="<?= $idcat ?>" name="back"/>
-                                                <input type="submit" name="delete" value="Удалить"/>
-                                            </form>
-                                        </strong>
-                                    </td>
-                                </tr>
-                            </tbody> 
-                            <?php
-                        endforeach;
-                        fclose($goodsfile);
-                        fclose($catsfile);
-                    endif;
+                        foreach ($array[$cat_id]['items'] as $item_id => $item):
+                            ?>
+                            <tr>
+                                <td class='images'><img src="images/<?= $item['imagename'] ?>"></td>
+                                <td><strong><?= $item['name'] ?></strong></td>
+                                <td><strong><?= $item['price'] ?> грн.</strong></td>
+                                <td><strong><?= $item_id ?></strong></td>
+                                <td>
+                                    <strong>
+                                        <form method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $cat_id ?>" name="category_of_edit"/>
+                                            <input type="hidden" value="<?= $item_id ?>" name="edit_id"/>
+                                            <input type="submit" name="edit" value="Редактировать"/>
+                                        </form>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <form method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $item_id ?>" name="del_id"/>
+                                            <input type="hidden" value="<?= $cat_id ?>" name="category_of_del"/>
+                                            <input type="submit" name="delete" value="Удалить"/>
+                                        </form>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody> 
+                        <?php
+                    endforeach;
                 endif;
                 ?>
             </table>

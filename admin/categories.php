@@ -1,3 +1,23 @@
+<?php
+$filename = 'goods.txt';
+$handle = fopen($filename, 'a+');
+$array = unserialize(fgets($handle));
+(array) $array;
+fclose($handle);
+if (filter_input(INPUT_POST, 'delid')):
+    unset($array[filter_input(INPUT_POST, 'delid')]);
+    $newfile = fopen($filename, 'w+');
+    fwrite($newfile, serialize($array));
+    fclose($newfile);
+    header("Location:" . $_SERVER['PHP_SELF']);
+endif;
+if (filter_input(INPUT_POST, 'category')):
+    session_start();
+    unset($_SESSION['cat_id']);
+    $_SESSION['cat_id'] = filter_input(INPUT_POST, 'cat_id');
+    header("Location:" . 'category.php');
+endif;
+?>
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -8,9 +28,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
-            .btn-link{
-                user-select: none;
-            }
             .container{
                 margin-top: 50px;
             }
@@ -19,9 +36,13 @@
                 max-height: 200px;
             }
             .images{
-                max-width: 100px;
+                width: 20%;
+                text-align: center;
             }
             h2{
+                text-align: center;
+            }
+            table, th{
                 text-align: center;
             }
         </style>
@@ -51,38 +72,44 @@
         </nav>
         <div class="container">
             <a href="addcategories.php" type="button" class="btn btn-default">Добавить новую категорию</a>
-            <h2>Категории:</h2>         
+            <h2>Категории:</h2>  
+            <br>
+            <br>
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Название</th>
                         <th>ID</th>
+                        <th>Управление</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php
-                if (file_exists('categories.txt')):
-                    $filename = 'categories.txt';
-                    $catsfile = fopen($filename, 'a+');
-                    $catsarray = unserialize(fgets($catsfile));
-                    foreach ($catsarray as $catid => $category):
-                        ?>
-                        
+                    <?php
+                    if (filesize($filename) > 0):
+                        foreach ($array as $id => $category):
+                            ?>
                             <tr>
                                 <td><strong>
-                                        <form action="category.php" method="post" enctype="multipart/form-data">
-                                            <input type="hidden" value="<?= $catid ?>" name="id"/>
-                                            <input type="submit" name="cat" value="<?= $category['name'] ?>" class="btn btn-link"/>
+                                        <form method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $id ?>" name="cat_id"/>
+                                            <input type="submit" name="category" value="<?= $category['name'] ?>" class="btn btn-link"/>
                                         </form>
                                     </strong>
                                 </td>
-                                <td><strong><?= $catid ?></strong></td>
+                                <td><strong><?= $id ?></strong></td>
+                                <td>
+                                    <strong>
+                                        <form method="post" enctype="multipart/form-data">
+                                            <input type="hidden" value="<?= $id ?>" name="delid"/>
+                                            <input type="submit" name="delete" value="Удалить"/>
+                                        </form>
+                                    </strong>
+                                </td>
                             </tr>
-                        <?php
-                    endforeach;
-                    fclose($catsfile);
-                endif;
-                ?>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
                 </tbody> 
             </table>
         </div>
