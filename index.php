@@ -1,23 +1,26 @@
 <?php
-$filename = 'goods.csv';
 session_start();
-if (!empty($_SESSION['cart'])) {
-    $cart = $_SESSION['cart'];
-} else {
-    $cart = array();
-}
-$tocart = filter_input(INPUT_POST, 'tocart');
+$filename = 'admin/goods.txt';
+$handle = fopen($filename, 'a+');
+$array = unserialize(fgets($handle));
+(array) $array;
+fclose($handle);
 $reset = filter_input(INPUT_POST, 'reset');
-if ($tocart) {
-    $cart[] = $tocart;
-    $_SESSION['cart'] = $cart;
+if (filter_input(INPUT_POST, 'buy')) {
+    $tocart = array(
+        'item_id' => filter_input(INPUT_POST, 'item_id'),
+        'cat_id' => filter_input(INPUT_POST, 'cat_id')
+    );
+    $_SESSION['cart'][] = $tocart;
     header("Location:" . $_SERVER['PHP_SELF']);
 } else if ($reset) {
     session_destroy();
     header("Location:" . $_SERVER['PHP_SELF']);
 }
-if(count($cart)>0){
-    $count = '('.count($cart).')';
+if (!isset($_SESSION['cart'])) {
+    $count = '';
+} else if (count($_SESSION['cart']) > 0) {
+    $count = '(' . count($_SESSION['cart']) . ')';
 }
 ?>
 <!DOCTYPE html>
@@ -31,8 +34,8 @@ if(count($cart)>0){
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link href="css/shop.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body>
-        <nav class="navbar navbar-inverse">
+    <body data-spy="scroll" data-target=".navbar" data-offset="50">
+        <nav class="navbar navbar-inverse" data-spy="affix">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -40,15 +43,25 @@ if(count($cart)>0){
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>                        
                     </button>
-                    <a class="navbar-brand" href="http://vitarr-shop.tk"><span class="glyphicon glyphicon-globe"></span></a>
+                    <a class="navbar-brand" href="http://test.dev"><span class="glyphicon glyphicon-globe"></span></a>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li><a href="http://vitarr-shop.tk">Каталог</a></li>
+                        <li><a href="http://test.dev">Каталог</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
-                        <li><a href="/admin/auth.php"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
+                        <li><a href="http://test.dev/cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
+                        <?php
+                        if (!isset($_SESSION['auth'])):
+                            ?>
+                            <li><a href="http://test.dev/admin/auth.php"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
+                            <?php
+                        else:
+                            ?>
+                            <li><a href=""><span class="glyphicon glyphicon-log-in"></span> Привет, <?= $_SESSION['auth'] ?></a></li>    
+                        <?php
+                        endif;
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -56,38 +69,37 @@ if(count($cart)>0){
         <div class="container text-center" id="content">
             <h3><strong>Наши товары:</strong></h3>
             <div class="row">
+                <h3><strong>Наши товары:</strong></h3>
                 <?php
-                $handle = fopen($filename, 'a+');
                 if ($handle):
-                    $num = 1;
-                    while ($item = fgetcsv($handle)):
-                        ?>
-                        <div class="col-md-4">
-                            <div class="product-item">
-                                <div class="pi-img-wrapper">
-                                    <img src="<?= $item[1] ?>" class="img-responsive" alt="Berry Lace Dress">
+                    foreach ($array as $cat_id => $category):
+                        foreach ($category['items'] as $item_id => $item):
+                            ?>
+                            <div class="col-md-4">
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="admin/images/<?= $item['imagename'] ?>" class="img-responsive" alt="Berry Lace Dress">
+                                    </div>
+                                    <h3><?= $item['name'] ?></h3>
+                                    <div class="pi-price"><?= $item['price'] ?> грн.</div>
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="item_id" value="<?= $item_id ?>"/>
+                                        <input type="hidden" name="cat_id" value="<?= $cat_id ?>"/>
+                                        <label class="glyphicon glyphicon-shopping-cart"></label><input type="submit" name="buy" value="Купить" class="btn add2cart"/>
+                                    </form>
                                 </div>
-                                <h3><?= $item[0] ?></h3>
-                                <div class="pi-price"><?= $item[2] ?> грн.</div>
-                                <form method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="tocart" value="<?= $num ?>"/>
-                                    <label class="glyphicon glyphicon-shopping-cart"></label><input type="submit" value="Купить" class="btn add2cart"/>
-                                </form>
-                            </div>
-                        </div>   
-                        <?php
-                        $num++;
-                    endwhile;
+                            </div>   
+                            <?php
+                        endforeach;
+                    endforeach;
                 endif;
-                fclose($handle);
                 ?>
             </div>
         </div>
         <br>
         <br>
         <footer class="container-fluid text-center">
-            <a href="#myNavbar" id="up"><span class="glyphicon glyphicon-arrow-up"></span>  Вернутся в начало страницы</a>
-            <br>
+            <h5>Developed by Victor :)</h5>
         </footer>
     </body>
 </html>

@@ -1,10 +1,14 @@
 <?php
+session_start();
+if (!isset($_SESSION['auth'])):
+    header("Location:" . 'http://test.dev');
+endif;
 $AVAILABLE_TYPES = array(
     'image/jpeg',
     'image/png',
     'image/gif',
 );
-session_start();
+
 if (isset($_SESSION['message'])):
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
@@ -37,6 +41,7 @@ if (filter_input(INPUT_POST, 'add')):
         $array[filter_input(INPUT_POST, 'selectedcat')]['items'][$id] = array(
             'imagename' => $_FILES[$file]['name'],
             'name' => filter_input(INPUT_POST, 'name'),
+            'description' => filter_input(INPUT_POST, 'description'),
             'price' => filter_input(INPUT_POST, 'price')
         );
         $newfile = fopen($filename, 'w+');
@@ -44,6 +49,10 @@ if (filter_input(INPUT_POST, 'add')):
         fclose($newfile);
         header("Location:" . $_SERVER['PHP_SELF']);
     endif;
+endif;
+if (filter_input(INPUT_POST, 'exit')):
+    unset($_SESSION['auth']);
+    header("Location:" . 'http://test.dev');
 endif;
 ?>
 <!DOCTYPE html>
@@ -55,25 +64,7 @@ endif;
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <style>
-            .container{
-                margin-top: 50px;
-            }
-            img{
-                max-width: 200px;
-                max-height: 200px;
-            }
-            .images{
-                width: 20%;
-                text-align: center;
-            }
-            h2{
-                text-align: center;
-            }
-            table, th{
-                text-align: center;
-            }
-        </style>
+        <link href="../css/admin.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -93,7 +84,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
+                        <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
             </div>
@@ -108,6 +99,7 @@ endif;
                         <tr>
                             <th>Изображение</th>
                             <th>Название</th>
+                            <th>Описание</th>
                             <th>Цена</th>
                             <th>Категория</th>
                         </tr>
@@ -116,6 +108,7 @@ endif;
                         <tr>
                             <td><input type="file" name="image" required/></td>
                             <td><input type="text" name="name" required/></td>
+                            <td><textarea type="text" name="description" required></textarea></td>
                             <td><input type="number" name="price" required/></td>
                             <td>
                                 <select name="selectedcat" required>

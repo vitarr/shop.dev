@@ -1,4 +1,8 @@
 <?php
+session_start();
+if (!isset($_SESSION['auth'])):
+    header("Location:" . 'http://test.dev');
+endif;
 $filename = 'goods.txt';
 $handle = fopen($filename, 'a+');
 $array = unserialize(fgets($handle));
@@ -12,10 +16,13 @@ if (filter_input(INPUT_POST, 'delid')):
     header("Location:" . $_SERVER['PHP_SELF']);
 endif;
 if (filter_input(INPUT_POST, 'category')):
-    session_start();
     unset($_SESSION['cat_id']);
     $_SESSION['cat_id'] = filter_input(INPUT_POST, 'cat_id');
     header("Location:" . 'category.php');
+endif;
+if (filter_input(INPUT_POST, 'exit')):
+    unset($_SESSION['auth']);
+    header("Location:" . 'http://test.dev');
 endif;
 ?>
 <!DOCTYPE html>
@@ -26,29 +33,15 @@ endif;
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <style>
-            .container{
-                margin-top: 50px;
-            }
-            img{
-                max-width: 200px;
-                max-height: 200px;
-            }
-            .images{
-                width: 20%;
-                text-align: center;
-            }
-            h2{
-                text-align: center;
-            }
-            table, th{
-                text-align: center;
-            }
-        </style>
+        <link href="../css/admin.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body>
-        <nav class="navbar navbar-inverse">
+    <style>
+        input{
+            user-select: none;
+        }
+    </style>
+    <body data-spy="scroll" data-target=".navbar" data-offset="50">
+        <nav class="navbar navbar-inverse" data-spy="affix">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -65,7 +58,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
+                        <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
             </div>
@@ -79,6 +72,7 @@ endif;
                 <thead>
                     <tr>
                         <th>Название</th>
+                        <th>Описание</th>
                         <th>ID</th>
                         <th>Управление</th>
                     </tr>
@@ -96,6 +90,7 @@ endif;
                                         </form>
                                     </strong>
                                 </td>
+                                <td><strong><?= $category['description'] ?></strong></td>
                                 <td><strong><?= $id ?></strong></td>
                                 <td>
                                     <strong>

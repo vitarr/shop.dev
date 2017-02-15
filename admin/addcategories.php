@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!isset($_SESSION['auth'])):
+    header("Location:" . 'http://test.dev');
+endif;
 if (isset($_SESSION['message'])):
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
@@ -20,6 +23,7 @@ if (filter_input(INPUT_POST, 'add')):
         $id = $last_category_id + 1;
         $array[$id] = array(
             'name' => filter_input(INPUT_POST, 'name'),
+            'description' => filter_input(INPUT_POST, 'description'),
             'items' => array()
         );
         $newfile = fopen($filename, 'w+');
@@ -27,6 +31,10 @@ if (filter_input(INPUT_POST, 'add')):
         fclose($newfile);
         header("Location:" . $_SERVER['PHP_SELF']);
     endif;
+endif;
+if (filter_input(INPUT_POST, 'exit')):
+    unset($_SESSION['auth']);
+    header("Location:" . 'http://test.dev');
 endif;
 ?>
 <!DOCTYPE html>
@@ -38,28 +46,7 @@ endif;
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <style>
-            .name{
-                width: 100%;
-            }
-            .container{
-                margin-top: 50px;
-            }
-            img{
-                max-width: 200px;
-                max-height: 200px;
-            }
-            .images{
-                width: 20%;
-                text-align: center;
-            }
-            h2{
-                text-align: center;
-            }
-            table, th{
-                text-align: center;
-            }
-        </style>
+        <link href="../css/admin.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -79,7 +66,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
+                        <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
             </div>
@@ -93,11 +80,13 @@ endif;
                     <thead>
                         <tr>
                             <th>Название</th>
+                            <th>Описание</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><input type="text" name="name" class="name" required/></td>
+                            <td><textarea type="text" name="description" required class="name"></textarea></td>
                         </tr>
                     </tbody> 
                 </table>

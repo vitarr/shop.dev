@@ -1,0 +1,36 @@
+.container{
+    margin-top: 50px;
+}
+img{
+    max-width: 200px;
+    max-height: 200px;
+}
+.images{
+    width: 20%;
+    text-align: center;
+}
+h2, h3{
+    text-align: center;
+}
+table, th{
+    text-align: center;
+}
+body {
+    position: relative; 
+}
+.affix {
+    top:0;
+    width: 100%;
+    z-index: 9999 !important;
+}
+.navbar {
+    margin-bottom: 0px;
+}
+
+.affix ~ .container-fluid {
+    position: relative;
+    top: 50px;
+}
+.newname{
+    width: 100%;
+}

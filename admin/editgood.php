@@ -1,10 +1,14 @@
 <?php
+session_start();
+if (!isset($_SESSION['auth'])):
+    header("Location:" . 'http://test.dev');
+endif;
 $AVAILABLE_TYPES = array(
     'image/jpeg',
     'image/png',
     'image/gif',
 );
-session_start();
+
 if (isset($_SESSION['message'])):
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
@@ -25,13 +29,14 @@ if (filter_input(INPUT_POST, 'edit')):
     $message = handler($file, $size, $root, $AVAILABLE_TYPES);
     if ($message[1] == 'loaded' || !$_FILES[$file]['name']):
         $message = '<div class="alert alert-success">
-                    <h3>Товар успешно успешно отредактирован.</h3>
+                    <h3 style="text-align: center">Товар успешно успешно отредактирован.</h3>
                 </div>';
         $_SESSION['message'] = $message;
         if ($_FILES[$file]['name']):
             $array[$cat_id]['items'][$item_id]['imagename'] = $_FILES[$file]['name'];
         endif;
         $array[$cat_id]['items'][$item_id]['name'] = filter_input(INPUT_POST, 'name');
+        $array[$cat_id]['items'][$item_id]['description'] = filter_input(INPUT_POST, 'description');
         $array[$cat_id]['items'][$item_id]['price'] = filter_input(INPUT_POST, 'price');
         if ($cat_id !== filter_input(INPUT_POST, 'selectedcat')):
             $array[filter_input(INPUT_POST, 'selectedcat')]['items'][$item_id] = $array[$cat_id]['items'][$item_id];
@@ -44,6 +49,10 @@ if (filter_input(INPUT_POST, 'edit')):
         header("Location:" . $_SERVER['PHP_SELF']);
     endif;
 endif;
+if (filter_input(INPUT_POST, 'exit')):
+    unset($_SESSION['auth']);
+    header("Location:" . 'http://test.dev');
+endif;
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -54,26 +63,8 @@ endif;
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="../css/admin.css" rel="stylesheet" type="text/css"/>
     </head>
-    <style>
-        .container{
-            margin-top: 50px;
-        }
-        img{
-            max-width: 200px;
-            max-height: 200px;
-        }
-        .images{
-            width: 20%;
-            text-align: center;
-        }
-        h2{
-            text-align: center;
-        }
-        table, th{
-            text-align: center;
-        }
-    </style>
     <body>
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -92,7 +83,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
+                        <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
             </div>
@@ -107,6 +98,7 @@ endif;
                         <tr>
                             <th>Изображение</th>
                             <th>Название</th>
+                            <th>Описание</th>
                             <th>Цена</th>
                             <th>Категория</th>
                         </tr>
@@ -117,8 +109,11 @@ endif;
                                 <img src="images/<?= $array[$cat_id]['items'][$item_id]['imagename'] ?>">
                                 <input type="file" name="image"/>
                             </td>
-                            <td class="parent">
-                                <span><input type="text" name="name"  value="<?= $array[$cat_id]['items'][$item_id]['name'] ?>"/></span>
+                            <td>
+                                <input type="text" name="name"  value="<?= $array[$cat_id]['items'][$item_id]['name'] ?>"/>
+                            </td>
+                            <td>
+                                <textarea type="text" name="description"><?= $array[$cat_id]['description'] ?></textarea>
                             </td>
                             <td>
                                 <input type="number" name="price"  value="<?= $array[$cat_id]['items'][$item_id]['price'] ?>"/>
