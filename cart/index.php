@@ -1,7 +1,7 @@
 <?php
-$file = file_exists('admin/goods.txt');
+$file = file_exists('../admin/goods.txt');
 if ($file):
-    $filename = 'admin/goods.txt';
+    $filename = '../admin/goods.txt';
     $handle = fopen($filename, 'r');
     if ($handle):
         $array = unserialize(fgets($handle));
