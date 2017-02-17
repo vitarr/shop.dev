@@ -34,3 +34,12 @@ body {
 .newname{
     width: 100%;
 }
+#rename{
+    margin-top: 5px;
+}
+textarea{
+    height: 100%;
+}
+.addcat{
+    width: 100%;
+}
