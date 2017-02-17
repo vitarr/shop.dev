@@ -17,6 +17,9 @@ if (filter_input(INPUT_POST, 'add')):
         $_SESSION['message'] = $message;
         $array = unserialize(fgets($handle));
         (array) $array;
+        if(!$array):
+            $array = array();
+        endif;
         fclose($handle);
         $categories_ids = array_keys($array);
         $last_category_id = end($categories_ids);

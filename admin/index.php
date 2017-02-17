@@ -97,11 +97,11 @@ endif;
                                 <tbody>
                                     <tr>
                                         <td class='images'><img src="images/<?= $item['imagename'] ?>"></td>
-                                        <td><div class="td"><strong><?= $item['name'] ?></strong></div></td>
-                                        <td><div class="td"><strong><?= $item['description'] ?></strong></div></td>
-                                        <td><div class="td"><strong><?= $item['price'] ?> грн.</strong></div></td>
-                                        <td><div class="td"><strong><?= $category['name'] ?></strong></div></td>
-                                        <td><div class="td"><strong><?= $id ?></strong></div></td>
+                                        <td><strong><?= $item['name'] ?></strong></td>
+                                        <td><strong><?= $item['description'] ?></strong></td>
+                                        <td><strong><?= $item['price'] ?> грн.</strong></td>
+                                        <td><strong><?= $category['name'] ?></strong></td>
+                                        <td><strong><?= $id ?></strong></td>
                                         <td>
                                             <strong>
                                                 <form method="post" enctype="multipart/form-data">
