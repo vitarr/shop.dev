@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['auth'])):
-    header("Location:" . 'http://test.dev');
+    header("Location:" . '../');
 endif;
 $AVAILABLE_TYPES = array(
     'image/jpeg',
@@ -13,11 +13,16 @@ if (isset($_SESSION['message'])):
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
 endif;
-$filename = 'goods.txt';
-$handle = fopen($filename, 'a+');
-$array = unserialize(fgets($handle));
-(array) $array;
-fclose($handle);
+$file = file_exists('goods.txt');
+if ($file):
+    $filename = 'goods.txt';
+    $handle = fopen($filename, 'r');
+    if ($handle):
+        $array = unserialize(fgets($handle));
+        (array) $array;
+        fclose($handle);
+    endif;
+endif;
 if (filter_input(INPUT_POST, 'add')):
     $file = 'image';
     $size = 3;
@@ -52,7 +57,7 @@ if (filter_input(INPUT_POST, 'add')):
 endif;
 if (filter_input(INPUT_POST, 'exit')):
     unset($_SESSION['auth']);
-    header("Location:" . 'http://test.dev');
+    header("Location:" . '../');
 endif;
 ?>
 <!DOCTYPE html>
@@ -84,6 +89,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="../"><span class="glyphicon glyphicon-log-in"></span> На сайт</a></li>
                         <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
@@ -94,7 +100,7 @@ endif;
                 <h2>Новый товар:</h2> 
                 <br>
                 <br>
-                <table class="table table-bordered">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Изображение</th>
@@ -114,11 +120,13 @@ endif;
                                 <select name="selectedcat" required>
                                     <option selected disabled=""></option>
                                     <?php
-                                    foreach ($array as $id => $category):
-                                        ?>
-                                        <option value="<?= $id ?>"><?= $category['name'] ?></option>
-                                        <?php
-                                    endforeach;
+                                    if ($file):
+                                        foreach ($array as $id => $category):
+                                            ?>
+                                            <option value="<?= $id ?>"><?= $category['name'] ?></option>
+                                            <?php
+                                        endforeach;
+                                    endif;
                                     ?>
                                 </select>
                             </td>

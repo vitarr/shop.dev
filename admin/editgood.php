@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['auth'])):
-    header("Location:" . 'http://test.dev');
+    header("Location:" . '../');
 endif;
 $AVAILABLE_TYPES = array(
     'image/jpeg',
@@ -14,7 +14,7 @@ if (isset($_SESSION['message'])):
     unset($_SESSION['message']);
 endif;
 $filename = 'goods.txt';
-$handle = fopen($filename, 'a+');
+$handle = fopen($filename, 'r');
 $array = unserialize(fgets($handle));
 (array) $array;
 fclose($handle);
@@ -51,7 +51,7 @@ if (filter_input(INPUT_POST, 'edit')):
 endif;
 if (filter_input(INPUT_POST, 'exit')):
     unset($_SESSION['auth']);
-    header("Location:" . 'http://test.dev');
+    header("Location:" . '../');
 endif;
 ?>
 <!DOCTYPE html>
@@ -83,6 +83,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="../"><span class="glyphicon glyphicon-log-in"></span> На сайт</a></li>
                         <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
@@ -93,7 +94,7 @@ endif;
                 <h2>Редактирование товара:</h2>
                 <br>
                 <br>
-                <table class="table table-bordered">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Изображение</th>

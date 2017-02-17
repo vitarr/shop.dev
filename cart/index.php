@@ -1,9 +1,14 @@
 <?php
-$filename = '../admin/goods.txt';
-$handle = fopen($filename, 'a+');
-$array = unserialize(fgets($handle));
-(array) $array;
-fclose($handle);
+$file = file_exists('admin/goods.txt');
+if ($file):
+    $filename = 'admin/goods.txt';
+    $handle = fopen($filename, 'r');
+    if ($handle):
+        $array = unserialize(fgets($handle));
+        (array) $array;
+        fclose($handle);
+    endif;
+endif;
 session_start();
 if (!isset($_SESSION['cart'])) {
     $count = '';
@@ -39,18 +44,18 @@ if (isset($_POST['drop'])) {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>                        
                     </button>
-                    <a class="navbar-brand" href="http://test.dev"><span class="glyphicon glyphicon-globe"></span></a>
+                    <a class="navbar-brand" href="../"><span class="glyphicon glyphicon-globe"></span></a>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li><a href="http://test.dev">Каталог</a></li>
+                        <li><a href="../">Каталог</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="http://test.dev/cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
+                        <li><a href="../cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
                         <?php
                         if (!isset($_SESSION['auth'])):
                             ?>
-                            <li><a href="http://test.dev/admin/auth.php"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
+                            <li><a href="../admin/auth.php"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
                             <?php
                         else:
                             ?>
@@ -67,7 +72,7 @@ if (isset($_POST['drop'])) {
             <div class="row">
                 <h3><strong>Корзина ваших покупок:</strong></h3>
                 <?php
-                if ($handle && isset($cart)):
+                if ($file && isset($cart)):
                     foreach ($cart as $key => $item):
                         ?>
                         <div class="col-md-4">

@@ -1,3 +1,9 @@
+<?php
+if (filter_input(INPUT_POST, 'exit')):
+    unset($_SESSION['auth']);
+    header("Location:" . '../');
+endif;
+?>
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -44,7 +50,8 @@
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Выйти</a></li>
+                        <li><a href="../"><span class="glyphicon glyphicon-log-in"></span> На сайт</a></li>
+                        <li><form method="post" class="form-inline"><input type="submit" name="exit" value="(Выйти)" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
             </div>
