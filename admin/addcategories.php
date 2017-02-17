@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['auth'])):
-    header("Location:" . 'http://test.dev');
+    header("Location:" . '../');
 endif;
 if (isset($_SESSION['message'])):
     $message = $_SESSION['message'];
@@ -34,7 +34,7 @@ if (filter_input(INPUT_POST, 'add')):
 endif;
 if (filter_input(INPUT_POST, 'exit')):
     unset($_SESSION['auth']);
-    header("Location:" . 'http://test.dev');
+    header("Location:" . '../');
 endif;
 ?>
 <!DOCTYPE html>
@@ -66,6 +66,7 @@ endif;
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="../"><span class="glyphicon glyphicon-log-in"></span> На сайт</a></li>
                         <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                     </ul>
                 </div>
