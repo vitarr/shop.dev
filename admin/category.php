@@ -21,7 +21,7 @@ elseif (filter_input(INPUT_POST, 'rename')):
     fclose($newfile);
     header("Location:" . $_SERVER['PHP_SELF']);
 elseif (filter_input(INPUT_POST, 'redesc')):
-    $array[filter_input(INPUT_POST, 'cat_id')]['description'] = filter_input(INPUT_POST, 'description');
+    $array[filter_input(INPUT_POST, 'cat_id')]['description'] = filter_input(INPUT_POST, 'newdesc');
     $newfile = fopen($filename, 'w+');
     fwrite($newfile, serialize($array));
     fclose($newfile);
@@ -62,8 +62,8 @@ endif;
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.php">Товары</a></li>
-                        <li><a href="categories.php">Категории</a></li>
+                        <li><a href="index.php">Товары</a></li>
+                        <li class="active"><a href="categories.php">Категории</a></li>
                         <li><a href="#">Заказы(В разработке)</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -88,20 +88,15 @@ endif;
                             <input type="hidden" value="<?= $cat_id ?>" name="cat_id"/>
                             <br>
                             <input type="text" value="<?= $name ?>" name="newname" class="newname"/>
-                            <br>
-                            <br>
-                            <br>
-                            <input type="submit" name="rename" value="Переименовать категорию" class="btn btn-default"/>
+                            <input id="rename" class="newname" type="submit" name="rename" value="Переименовать категорию" class="btn btn-default"/>
                         </form>
                     </div>
                     <div class="col-md-6">
                         <form method="post" enctype="multipart/form-data">
                             <input type="hidden" value="<?= $cat_id ?>" name="cat_id"/>
                             <br>
-                            <textarea type="text" name="newname" class="newname"><?= $array[$cat_id]['description'] ?></textarea>
-                            <br>
-                            <br>
-                            <input type="submit" name="redesc" value="Изменить описание" class="btn btn-default"/>
+                            <textarea type="text" name="newdesc" class="newname"><?= $array[$cat_id]['description'] ?></textarea>
+                            <input class="newname" type="submit" name="redesc" value="Изменить описание" class="btn btn-default"/>
                         </form>
                     </div>
                 </div>

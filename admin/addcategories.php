@@ -89,8 +89,8 @@ endif;
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="text" name="name" class="name" required/></td>
-                            <td><textarea type="text" name="description" required class="name"></textarea></td>
+                            <td><input class="addcat" type="text" name="name" class="name" required/></td>
+                            <td><textarea class="addcat" type="text" name="description" required class="name"></textarea></td>
                         </tr>
                     </tbody> 
                 </table>
