@@ -1,0 +1,1 @@
+a:2:{s:5:"admin";a:2:{s:5:"login";s:6:"Victor";s:8:"password";s:7:"vfhfrfy";}s:5:"Anton";a:2:{s:5:"login";s:5:"Anton";s:8:"password";s:6:"qwerty";}}

@@ -1,17 +1,27 @@
 <?php
-$filename = '../goods.csv';
+$file = file_exists('../admin/goods.txt');
+if ($file):
+    $filename = '../admin/goods.txt';
+    $handle = fopen($filename, 'r');
+    if ($handle):
+        $array = unserialize(fgets($handle));
+        (array) $array;
+        fclose($handle);
+    endif;
+endif;
 session_start();
-$goods_list = file($filename);
+if (!isset($_SESSION['cart'])) {
+    $count = '';
+} else if (count($_SESSION['cart']) > 0) {
+    $cart = $_SESSION['cart'];
+    $count = '(' . count($_SESSION['cart']) . ')';
+}
 if (isset($_POST['drop'])) {
     $item_id = filter_input(INPUT_POST, 'drop');
     if (isset($_SESSION['cart'][$item_id])) {
         unset($_SESSION['cart'][$item_id]);
         header("Location:" . $_SERVER['PHP_SELF']);
     }
-}
-$cart = $_SESSION['cart'];
-if (count($cart) > 0) {
-    $count = '(' . count($cart) . ')';
 }
 ?>
 <!DOCTYPE html>
@@ -25,8 +35,8 @@ if (count($cart) > 0) {
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link href="../css/shop.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body>
-        <nav class="navbar navbar-inverse">
+    <body data-spy="scroll" data-target=".navbar" data-offset="50">
+        <nav class="navbar navbar-inverse" data-spy="affix">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -34,14 +44,25 @@ if (count($cart) > 0) {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>                        
                     </button>
-                    <a class="navbar-brand" href="http://vitarr-shop.tk"><span class="glyphicon glyphicon-globe"></span></a>
+                    <a class="navbar-brand" href="../"><span class="glyphicon glyphicon-globe"></span></a>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li><a href="http://vitarr-shop.tk">Каталог</a></li>
+                        <li><a href="../">Каталог</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="../"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
+                        <li><a href="../cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
+                        <?php
+                        if (!isset($_SESSION['auth'])):
+                            ?>
+                            <li><a href="../admin/auth.php"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
+                            <?php
+                        else:
+                            ?>
+                            <li><a href=""><span class="glyphicon glyphicon-log-in"></span> Привет, <?= $_SESSION['auth'] ?></a></li>    
+                        <?php
+                        endif;
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -49,22 +70,18 @@ if (count($cart) > 0) {
         <div class="container text-center" id="content">
             <h3><strong>Корзина ваших покупок:</strong></h3>
             <div class="row">
+                <h3><strong>Корзина ваших покупок:</strong></h3>
                 <?php
-                $handle = fopen($filename, 'a+');
-                if ($handle && $cart):
-                    foreach ($goods_list as $position):
-                        $position = preg_split('/,/', $position);
-                        $goods[] = $position;
-                    endforeach;
-                    foreach ($cart as $key => $purchase):
+                if ($file && isset($cart)):
+                    foreach ($cart as $key => $item):
                         ?>
                         <div class="col-md-4">
                             <div class="product-item">
                                 <div class="pi-img-wrapper">
-                                    <img src="../<?= $goods[$purchase - 1][1] ?>" class="img-responsive" alt="Berry Lace Dress">
+                                    <img src="../admin/images/<?= $array[$item['cat_id']]['items'][$item['item_id']]['imagename'] ?>" class="img-responsive" alt="img">
                                 </div>
-                                <h3><?= $goods[$purchase - 1][0] ?></h3>
-                                <div class="pi-price"><?= $goods[$purchase - 1][2] ?> грн.</div>
+                                <h3><?= $array[$item['cat_id']]['items'][$item['item_id']]['name'] ?></h3>
+                                <div class="pi-price"><?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?> грн.</div>
                                 <form method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="drop" value="<?= $key ?>"/>
                                     <label class="glyphicon glyphicon-scissors"></label><input type="submit" value="Удалить из корзины" class="btn add2cart"/>
@@ -74,11 +91,10 @@ if (count($cart) > 0) {
                         <?php
                     endforeach;
                 endif;
-                fclose($handle);
                 ?>
             </div>
             <br>
-            <?php if (count($_SESSION['cart']) > 0): ?>
+            <?php if (isset($cart) && count($cart) > 0): ?>
                 <form action="../" method="post" enctype="multipart/form-data">
                     <input type="submit" name="reset" id="reset" value="Очистить корзину" class="btn btn-default btn-block">
                 </form>
@@ -86,8 +102,7 @@ if (count($cart) > 0) {
         </div>
         <br>
         <footer class="container-fluid text-center">
-            <a href="#myNavbar" id="up"><span class="glyphicon glyphicon-arrow-up"></span>  Вернутся в начало страницы</a>
-            <br>
+            <h5>Developed by Victor :)</h5>
         </footer>
     </body>
 </html>
