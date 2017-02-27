@@ -5,9 +5,8 @@ $users = unserialize(fgets($handle));
 fclose($handle);
 $message = '';
 session_start();
-if (!isset($_SESSION['cart'])) {
-    $count = '';
-} else if (count($_SESSION['cart']) > 0) {
+$count = '';
+if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $cart = $_SESSION['cart'];
     $count = '(' . count($_SESSION['cart']) . ')';
 }
@@ -124,21 +123,21 @@ endif;
                                     </form>
                                     <form id="register-form" method="post" role="form" style="display: none;">
                                         <div class="form-group">
-                                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Ваш логин:" value="">
                                         </div>
                                         <div class="form-group">
-                                            <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
+                                            <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Ваш Email:" value="">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+                                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Ваш пароль:">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
+                                            <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Подтвердите ваш пароль:">
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">
-                                                    <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+                                                    <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Зарегистрироваться">
                                                 </div>
                                             </div>
                                         </div>
@@ -152,7 +151,7 @@ endif;
             </div>
 
         </div>
-        <footer class="container-fluid text-center">
+        <footer class="text-center">
             <h5>Developed by Victor :)</h5>
         </footer>
 </html>

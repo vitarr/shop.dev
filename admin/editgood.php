@@ -114,7 +114,7 @@ endif;
                                 <input type="text" name="name"  value="<?= $array[$cat_id]['items'][$item_id]['name'] ?>"/>
                             </td>
                             <td>
-                                <textarea type="text" name="description"><?= $array[$cat_id]['description'] ?></textarea>
+                                <textarea type="text" name="description"><?= $array[$cat_id]['items'][$item_id]['description'] ?></textarea>
                             </td>
                             <td>
                                 <input type="number" name="price"  value="<?= $array[$cat_id]['items'][$item_id]['price'] ?>"/>

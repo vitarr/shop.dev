@@ -5,10 +5,13 @@
 }
 
 footer {
+    height: 50px;
     margin-top: 25px;
     background-color: #222;
     color: #9d9d9d;
-    padding: 25px;
+    position: fixed;
+    left: 0; bottom: 0;
+    width: 100%;
 }
 
 
@@ -51,7 +54,7 @@ body {
 .pi-img-wrapper {
     position: relative;    
 }
-.pi-img-wrapper img {
+.pi-img-wrapper input {
     min-height: 150px;
     max-height: 150px;
 }
@@ -116,4 +119,8 @@ body {
 .affix ~ .container-fluid {
     position: relative;
     top: 50px;
+}
+.pi-img-wrapper img {
+    min-height: 150px;
+    max-height: 150px;
 }

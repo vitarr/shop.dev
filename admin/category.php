@@ -48,6 +48,11 @@ endif;
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link href="../css/admin.css" rel="stylesheet" type="text/css"/>
+        <style>
+            textarea{
+                height: 36px;
+            }
+        </style>
     </head>
     <body data-spy="scroll" data-target=".navbar" data-offset="50">
         <nav class="navbar navbar-inverse" data-spy="affix">
@@ -79,7 +84,7 @@ endif;
                 $cat_id = $_SESSION['cat_id'];
                 $name = $array[$cat_id]['name'];
                 ?>
-                <h2><?= $name ?>:</h2>
+                <h3><?= $name ?>:</h3>
                 <br>
                 <br>
                 <div class="row">
@@ -101,7 +106,8 @@ endif;
                     </div>
                 </div>
                 <br>
-                <h2>Товары в категории:</h2>
+                <h3>Товары в категории:</h3>
+                <br>
                 <table class="table table-hover">
                     <thead>
                         <tr>

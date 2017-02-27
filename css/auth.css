@@ -95,8 +95,11 @@
     border-color: #1CA347;
 }
 footer {
+    height: 50px;
     margin-top: 150px;
     background-color: #222;
     color: #9d9d9d;
-    padding: 25px;
+    position: fixed;
+    left: 0; bottom: 0;
+    width: 100%;
 }
