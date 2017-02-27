@@ -29,7 +29,7 @@ if (filter_input(INPUT_POST, 'item_id')) {
         );
         $_SESSION['cart'][filter_input(INPUT_POST, 'product_id')] = $tocart;
     endif;
-    header("Location:" . $_SERVER['PHP_SELF']);
+    header("Location:" . "/cart/");
 }
 $count = '';
 if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
