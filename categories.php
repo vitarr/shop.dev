@@ -67,13 +67,14 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         </nav>
         <div class="container" id="content">
             <br><br><br>
-            <div class="row">
-                <h3><strong>Категории товаров:</strong></h3>
-                <br><br><br>
-                <?php
-                if ($file):
-                    foreach ($array as $cat_id => $category):
-                        ?>
+            <div class="row catname">
+                <h3 class="alert alert-warning"><strong>Категории товаров:</strong></h3>
+            </div>
+            <?php
+            if ($file):
+                foreach ($array as $cat_id => $category):
+                    ?>
+                    <div class="row categories">
                         <strong>
                             <form method = "post" enctype = "multipart/form-data">
                                 <input type = "hidden" value = "<?= $cat_id ?>" name = "user_cat_id"/>
@@ -81,12 +82,12 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
                                 <p><small><?= $category['description'] ?></small></p>
                             </form>
                         </strong>
-                        <br>
-                        <?php
-                    endforeach;
-                endif;
-                ?>
-            </div>
+                    </div>
+                    <br>
+                    <?php
+                endforeach;
+            endif;
+            ?>
         </div>
         <br>
         <br>

@@ -127,3 +127,11 @@ body {
 #content{
     margin-bottom: 40px;
 }
+.categories{
+    padding: 20px;
+    margin-top: 20px;
+    background: white;
+}
+.catname h3{
+    text-align: center;
+}

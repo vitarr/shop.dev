@@ -81,7 +81,7 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         <div class="container text-center" id="content">
             <br><br><br>
             <div class="row">
-                <h3><strong>Все товары:</strong></h3>
+                <h3 class="alert alert-warning"><strong>Все товары:</strong></h3>
                 <?php
                 if ($file):
                     foreach ($array as $cat_id => $category):

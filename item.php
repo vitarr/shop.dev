@@ -89,14 +89,16 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         if ($file):
             ?>
             <div class="container">
-                <div class="row">
+                <div class="row item">
                     <div class="col-xs-5 item-photo">
                         <img style="max-width:100%;" src="admin/images/<?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['imagename'] ?>" />
                     </div>
                     <div class="col-xs-7" style="border:0px solid gray">
-                        <h3><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['name'] ?></h3>    
+                        <h3><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['name'] ?></h3>
+                        <hr>
                         <h6 class="title-price"><small>Стоимость:</small></h6>
-                        <h3 style="margin-top:0px;"><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['price'] ?> грн.</h3> 
+                        <h3 style="margin-top:0px;"><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['price'] ?> грн.</h3>
+                        <hr>
                         <form method="post" enctype="multipart/form-data">
                             <div class="section" style="padding-bottom:20px;">
                                 <h6 class="title-attr"><small>Количество:</small></h6>                    
@@ -109,20 +111,19 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
                             <div class="section" style="padding-bottom:20px;">
                                 <input type="hidden" name="product_id" value="<?= $_SESSION['item']['item_id'] ?>"/>
                                 <input type="hidden" name="category_id" value="<?= $_SESSION['item']['cat_id'] ?>"/>
-                                <button type="submit" value="buy" name="buy" class="btn btn-success"><span style="margin-right:20px" class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Добавить в корзину</button>
+                                <button id="buy" type="submit" value="buy" name="buy" class="btn btn-success"><span style="margin-right:20px" class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span><b> В корзину </b></button>
                             </div> 
                         </form>
+                        <hr>
                     </div>                              
                     <div class="col-xs-12">
                         <ul class="menu-items">
                             <li class="active">Описание:</li>
                         </ul>
                         <div style="width:100%;border-top:1px solid silver">
-                            <p style="padding:15px;">
-                                <small>
-                                    <p><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['description'] ?></p>
-                                </small>
-                            </p>
+                            <br>
+                            <p><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['description'] ?></p>
+                            <br>
                         </div>
                     </div>		
                 </div>

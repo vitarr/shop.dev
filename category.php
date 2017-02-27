@@ -82,7 +82,7 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
                     $cat_id = $_SESSION['user_cat_id'];
                     $name = $array[$cat_id]['name'];
                     ?>
-                    <h3><strong><?= $name ?>:</strong></h3>
+                    <h3 class="alert alert-warning"><strong><?= $name ?>:</strong></h3>
                     <?php
                     foreach ($array[$cat_id]['items'] as $item_id => $item):
                         ?>
