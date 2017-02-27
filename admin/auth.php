@@ -50,6 +50,7 @@ endif;
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
                         <li><a href="../">Каталог</a></li>
+                        <li><a href="../categories.php">Категории</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="../cart/"><span class="glyphicon glyphicon-shopping-cart"></span><?= $count ?> Корзина</a></li>
