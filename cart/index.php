@@ -93,7 +93,7 @@ if (isset($_POST['drop'])) {
                                 if ($file && isset($cart)):
                                     foreach ($cart as $key => $item):
                                         ?>
-                                        <div class="row">
+                                        <div class="row item">
                                             <div class="col-xs-2"><img class="img-responsive" src="../admin/images/<?= $array[$item['cat_id']]['items'][$item['item_id']]['imagename'] ?>">
                                             </div>
                                             <div class="col-xs-4">
@@ -101,11 +101,11 @@ if (isset($_POST['drop'])) {
                                             </div>
                                             <div class="col-xs-6">
                                                 <div class="col-xs-6 text-right">
-                                                    <input id="price" type="hidden" value="<?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?>">
+                                                    <input class="price" type="hidden" value="<?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?>">
                                                     <h6><strong><?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?> грн. <span class="text-muted"> x</span></strong></h6>
                                                 </div>
                                                 <div class="col-xs-4">
-                                                    <input id="count" type="number" class="form-control input-sm" value="<?= $item['quantity']?>">
+                                                    <input type="number" class="form-control input-sm count" value="<?= $item['quantity']?>">
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <form method="post" enctype="multipart/form-data">
