@@ -51,7 +51,7 @@ endif;
                     <ul class="nav navbar-nav">
                         <li><a href="goods.php">Товары</a></li>
                         <li><a href="categories.php">Категории</a></li>
-                        <li><a href="#">Заказы(В разработке)</a></li>
+                        <li><a href="orders.php">Заказы</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="../"><span class="glyphicon glyphicon-log-in"></span> На сайт</a></li>
@@ -60,6 +60,7 @@ endif;
                 </div>
             </div>
         </nav>
+        <br><br><br><br><br><br><br><br><br><br><br>
         <div class="container-fluid">
             <h1>Добро пожаловать, Администратор!</h1>
         </div>

@@ -43,6 +43,7 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/up.js" type="text/javascript"></script>
         <link href="css/shop.css" rel="stylesheet" type="text/css"/>
     </head>
     <body data-spy="scroll" data-target=".navbar" data-offset="50">
@@ -112,10 +113,14 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
                 ?>
             </div>
         </div>
+        <div id="up">
+            <a type="button" class="btn btn-default" href="#content"><span class ="glyphicon glyphicon-chevron-up" style="color: grey;"></span></a>
+        </div>
         <br>
         <br>
         <footer class="text-center">
             <h5>Developed by Victor :)</h5>
-        </footer>
-    </body>
+        </div>
+    </footer>
+</body>
 </html>

@@ -1,4 +1,8 @@
 <?php
+session_start();
+if (!isset($_SESSION['cart']) || (count($_SESSION['cart']) < 1)) {
+    header("Location:" . '../');
+}
 $file = file_exists('../admin/goods.txt');
 if ($file):
     $filename = '../admin/goods.txt';
@@ -9,11 +13,19 @@ if ($file):
         fclose($handle);
     endif;
 endif;
-session_start();
 $count = '';
 if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $cart = $_SESSION['cart'];
     $count = '(' . count($_SESSION['cart']) . ')';
+}
+if (isset($_POST['tocheckout'])) {
+    unset($_POST['tocheckout']);
+    $order = array();
+    foreach ($_POST as $position_id => $position) {
+        $order[$position_id] = $position;
+    }
+    $_SESSION['order'] = $order;
+    header("Location:" . '../checkout.php');
 }
 if (isset($_POST['drop'])) {
     $item_id = filter_input(INPUT_POST, 'drop');
@@ -89,6 +101,7 @@ if (isset($_POST['drop'])) {
                                 </div>
                             </div>
                             <div class="panel-body">
+                                <form id="tocheck" method="post" enctype="multipart/form-data"></form>
                                 <?php
                                 if ($file && isset($cart)):
                                     foreach ($cart as $key => $item):
@@ -101,11 +114,12 @@ if (isset($_POST['drop'])) {
                                             </div>
                                             <div class="col-xs-6">
                                                 <div class="col-xs-6 text-right">
+                                                    <input  form="tocheck" type="hidden" name="<?= $key ?>[category]" value="<?= $item['cat_id'] ?>">
                                                     <input class="price" type="hidden" value="<?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?>">
                                                     <h6><strong><?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?> грн. <span class="text-muted"> x</span></strong></h6>
                                                 </div>
                                                 <div class="col-xs-4">
-                                                    <input type="number" class="form-control input-sm count" value="<?= $item['quantity']?>">
+                                                    <input form="tocheck" type="number" name="<?= $key ?>[quantity]" class="form-control input-sm count" value="<?= $item['quantity'] ?>">
                                                 </div>
                                                 <div class="col-xs-2">
                                                     <form method="post" enctype="multipart/form-data">
@@ -147,9 +161,7 @@ if (isset($_POST['drop'])) {
                                         <h4 class="text-right">Всего: <strong id="sum"></strong></h4>
                                     </div>
                                     <div class="col-xs-3">
-                                        <button type="button" class="btn btn-success btn-block">
-                                            Оформить заказ
-                                        </button>
+                                        <input form="tocheck" type="submit" name="tocheckout" class="btn btn-success btn-block" value="Оформить заказ">
                                     </div>
                                 </div>
                             </div>

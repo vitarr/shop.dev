@@ -135,3 +135,9 @@ body {
 .catname h3{
     text-align: center;
 }
+#up{
+    font-size: 30px;
+    height: 50px;
+    position: fixed;
+    left: 0.5%; bottom: 10%;
+}

@@ -63,7 +63,7 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="/">Каталог</a></li>
+                        <li><a href="/">Каталог</a></li>
                         <li><a href="categories.php">Категории</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
