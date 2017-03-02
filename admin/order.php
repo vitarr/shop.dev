@@ -59,8 +59,8 @@ endif;
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
                         <li><a href="goods.php">Товары</a></li>
-                        <li class="active"><a href="categories.php">Категории</a></li>
-                        <li><a href="orders.php">Заказы</a></li>
+                        <li><a href="categories.php">Категории</a></li>
+                        <li class="active"><a href="orders.php">Заказы</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="../"><span class="glyphicon glyphicon-log-in"></span> На сайт</a></li>
