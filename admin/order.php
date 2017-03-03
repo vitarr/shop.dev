@@ -75,7 +75,7 @@ endif;
             </div>  
             <div class="row cart-body">
                 <form class="form-horizontal" method="post" action="">
-                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 Представление заказа 
@@ -116,7 +116,7 @@ endif;
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                         <div class="panel panel-info">
                             <div class="panel-heading">Контакты</div>
                             <div class="panel-body">

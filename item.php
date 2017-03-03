@@ -36,6 +36,10 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     $cart = $_SESSION['cart'];
     $count = '(' . count($_SESSION['cart']) . ')';
 }
+if (filter_input(INPUT_POST, 'exit')):
+    unset($_SESSION['auth']);
+    header("Location:" . $_SERVER['PHP_SELF']);
+endif;
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -75,7 +79,8 @@ if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
                             <?php
                         else:
                             ?>
-                            <li><a href=""><span class="glyphicon glyphicon-log-in"></span> Привет, <?= $_SESSION['auth'] ?></a></li>    
+                            <li><a href=""><span class="glyphicon glyphicon-log-in"></span> Привет, <?= $_SESSION['auth'] ?></a></li>
+                            <li><form method="post" class="form-inline"><input type="submit" name="exit" value="Выйти" class="btn btn-link"><span class="glyphicon glyphicon-log-in"></span></form></li>
                         <?php
                         endif;
                         ?>
