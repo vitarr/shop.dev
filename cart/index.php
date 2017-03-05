@@ -94,10 +94,10 @@ endif;
                             <div class="panel-heading">
                                 <div class="panel-title">
                                     <div class="row">
-                                        <div class="col-xs-6">
+                                        <div class="col-xs-12 col-lg-6">
                                             <h5><span class="glyphicon glyphicon-shopping-cart"></span> Корзина ваших товаров</h5>
                                         </div>
-                                        <div class="col-xs-6">
+                                        <div class="col-xs-12 col-lg-6">
                                             <a href="../index.php" type="button" class="btn btn-warning btn-sm btn-block">
                                                 <span class="glyphicon glyphicon-share-alt"></span> Продолжить покупки
                                             </a>
@@ -112,21 +112,21 @@ endif;
                                     foreach ($cart as $key => $item):
                                         ?>
                                         <div class="row item">
-                                            <div class="col-xs-2"><img class="img-responsive" src="../admin/images/<?= $array[$item['cat_id']]['items'][$item['item_id']]['imagename'] ?>">
+                                            <div class="col-xs-12 col-lg-2"><img class="img-responsive" src="../admin/images/<?= $array[$item['cat_id']]['items'][$item['item_id']]['imagename'] ?>">
                                             </div>
-                                            <div class="col-xs-4">
+                                            <div class="col-xs-12 col-lg-4">
                                                 <h4 class="product-name"><strong><?= $array[$item['cat_id']]['items'][$item['item_id']]['name'] ?></strong></h4><h4><small><?= $array[$item['cat_id']]['items'][$item['item_id']]['description'] ?></small></h4>
                                             </div>
-                                            <div class="col-xs-6">
-                                                <div class="col-xs-6 text-right">
+                                            <div class="col-xs-12 col-lg-6">
+                                                <div class="col-xs-12 col-lg-6 text-right">
                                                     <input  form="tocheck" type="hidden" name="<?= $key ?>[category]" value="<?= $item['cat_id'] ?>">
                                                     <input class="price" type="hidden" value="<?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?>">
                                                     <h6><strong><?= $array[$item['cat_id']]['items'][$item['item_id']]['price'] ?> грн. <span class="text-muted"> x</span></strong></h6>
                                                 </div>
-                                                <div class="col-xs-4">
+                                                <div class="col-xs-12 col-lg-4">
                                                     <input form="tocheck" type="number" name="<?= $key ?>[quantity]" class="form-control input-sm count" value="<?= $item['quantity'] ?>">
                                                 </div>
-                                                <div class="col-xs-2">
+                                                <div class="col-xs-12 col-lg-2 text-right">
                                                     <form method="post" enctype="multipart/form-data">
                                                         <button type="submit" name="drop" value="<?= $key ?>" class="btn btn-link btn-xs">
                                                             <span class="glyphicon glyphicon-trash"> </span>
@@ -142,17 +142,17 @@ endif;
                                 ?>
                                 <div class="row">
                                     <div class="text-center">
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-12 col-lg-3">
                                             <?php if (isset($cart) && count($cart) > 0): ?>
                                                 <form action="../" method="post" enctype="multipart/form-data">
                                                     <input type="submit" name="reset" id="reset" value="Очистить корзину" class="btn btn-default btn-block">
                                                 </form>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="col-xs-6">
+                                        <div class="col-xs-12 col-lg-6 text-right">
                                             <h6 class="text-right">Добавлены товары?</h6>
                                         </div>
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-12 col-lg-3 text-right">
                                             <a href="/cart/" type="button" class="btn btn-default btn-sm btn-block">
                                                 Обновить корзину
                                             </a>
@@ -162,10 +162,10 @@ endif;
                             </div>
                             <div class="panel-footer">
                                 <div class="row text-center">
-                                    <div class="col-xs-9">
+                                    <div class="col-xs-12 col-lg-9">
                                         <h4 class="text-right">Всего: <strong id="sum"></strong></h4>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-12 col-lg-3">
                                         <input form="tocheck" type="submit" name="tocheckout" class="btn btn-success btn-block" value="Оформить заказ">
                                     </div>
                                 </div>

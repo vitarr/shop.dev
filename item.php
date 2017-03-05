@@ -95,10 +95,10 @@ endif;
             ?>
             <div class="container">
                 <div class="row item">
-                    <div class="col-xs-5 item-photo">
+                    <div class="col-xs-12 col-lg-5 item-photo">
                         <img style="max-width:100%;" src="admin/images/<?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['imagename'] ?>" />
                     </div>
-                    <div class="col-xs-7" style="border:0px solid gray">
+                    <div class="col-xs-12 col-lg-7" style="border:0px solid gray">
                         <h3><?= $array[$_SESSION['item']['cat_id']]['items'][$_SESSION['item']['item_id']]['name'] ?></h3>
                         <hr>
                         <h6 class="title-price"><small>Стоимость:</small></h6>

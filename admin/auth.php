@@ -72,10 +72,6 @@ endif;
         </nav>
         <br>
         <br>
-        <br>
-        <br>
-        <br>
-        <br>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
@@ -150,7 +146,6 @@ endif;
                     </div>
                 </div>
             </div>
-
         </div>
         <footer class="text-center">
             <h5>Developed by Victor :)</h5>
